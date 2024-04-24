@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -8,10 +8,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
-import FormLabel from "@mui/material/FormLabel";
-import Button from "@mui/material/Button";
+
+import FormLabel from '@mui/material/FormLabel';
+import Button from '@mui/material/Button';
+import { createPoll } from "../../controllers/poll";
+
+import { v4 as uuidv4 } from 'uuid';
+import { userStore } from "../../store";
 
 import "./styles.css";
+
 
 const style = {
   position: "absolute",
@@ -23,11 +29,13 @@ const style = {
   border: "1px solid gray",
   boxShadow: 24,
   p: 4,
-  borderRadius: "10px"
+  borderRadius: "10px",
 };
 
-export const PollBuilder = (props) => {
-  const { question = "what is your favourite snacks", handleClose } = props;
+export const PollBuilderModal = (props) => {
+  const { handleClose, rowData, question } = props;
+
+  console.log(rowData, "rowData")
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const pollType = [
@@ -50,13 +58,22 @@ export const PollBuilder = (props) => {
   const [answers, setAnswers] = useState(["biscuit", "burger", "snacks"]);
   const [inputVal, setInputVal] = useState("");
   const [showInput, setInputElement] = useState(false);
-
+  const user = userStore((state) => state.user);
   const submitHandler = (e) => {
     e.preventDefault();
+    const id = uuidv4()
+    createPoll(id,{id, title: question ,answers, author: user.uid}).then((data)=> console.log(data))
     setAnswers([...answers, inputVal]);
-    setInputElement(false);
-    setInputVal("");
-  };
+
+    setInputElement(false)
+    setInputVal("")
+  }
+  // function handleSave(){
+  //   const id = uuidv4()
+  //   createPoll(id,{id, title: question ,answers, author: user.uid}).then((data)=> console.log(data))
+  // }
+
+
 
   return (
     <div>
@@ -79,38 +96,35 @@ export const PollBuilder = (props) => {
               >
                 {pollType.map((type, index) => {
                   return (
-                   <div className="polltype">
-                     <FormControlLabel
-                      value={type.id}
-                      control={<Radio />}
-                      label={type.value}
-                      checked={type.id === selectedType}
-                      onChange={() => setSelectedType(type.id)}
-                      key={index}
-                    
-                    />
-                   </div>
+                    <div className="polltype" key={index}>
+                      <FormControlLabel
+                        value={type.id}
+                        control={<Radio />}
+                        label={type.value}
+                        checked={type.id === selectedType}
+                        onChange={() => setSelectedType(type.id)}
+                      />
+                    </div>
                   );
                 })}
               </RadioGroup>
             </FormControl>
             <div className="question">
-                  <input value={question}  />
-                </div>
+              <input value={rowData?.question} />
+            </div>
             {selectedType === "single" ? (
               <div>
                 <FormControl>
                   <RadioGroup>
-                    {answers.map((data, index) => {
+                    {rowData?.options?.map((data, index) => {
                       return (
-                       <div className="radioLabel">
-                         <FormControlLabel
-                          control={<Radio />}
-                          label={data}
-                          value={data}
-                          key={index}
-                        />
-                       </div>
+                        <div className="radioLabel" key={index}>
+                          <FormControlLabel
+                            control={<Radio />}
+                            label={data}
+                            value={data}
+                          />
+                        </div>
                       );
                     })}
                   </RadioGroup>
@@ -127,7 +141,7 @@ export const PollBuilder = (props) => {
                         setInputVal(e.target.value);
                       }}
                     />
-                     <button>+</button>
+                    <button>+</button>
                   </form>
                 )}
               </div>
@@ -135,15 +149,14 @@ export const PollBuilder = (props) => {
               <div>
                 <FormControl>
                   <FormGroup>
-                    {answers.map((data, index) => {
+                    {rowData?.options?.map((data, index) => {
                       return (
-                       <div  className="checkBoxLabel">
-                         <FormControlLabel
-                          control={<Checkbox />}
-                          label={data}
-                          key={index}
-                        />
-                       </div>
+                        <div className="checkBoxLabel" key={index}>
+                          <FormControlLabel
+                            control={<Checkbox />}
+                            label={data}
+                          />
+                        </div>
                       );
                     })}
                   </FormGroup>
@@ -167,7 +180,9 @@ export const PollBuilder = (props) => {
             )}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}></Typography>
-          <Typography className="closeModal"  onClick={handleClose}>X</Typography>
+          <Typography className="closeModal" onClick={handleClose}>
+            X
+          </Typography>
         </Box>
       </Modal>
     </div>

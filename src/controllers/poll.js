@@ -1,22 +1,15 @@
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, } from "firebase/firestore";
 import { db } from "../services/firebase";
 
-export async function getPoll(documentId){
-    const docRef = doc(db, "poll", documentId);
+export async function getPoll(authorId){
+  const q = query(collection(db, "poll"), where("author", "==", authorId));
 
-    // Fetch the document
-    const docSnapshot = await getDoc(docRef);
-
-    // Check if the document exists
-    if (docSnapshot.exists()) {
-      // Document data
-      const data = docSnapshot.data();
-      console.log("Document data:", data);
-      return data;
-    } else {
-      console.log("No such document!");
-      return null;
-    }
+  const querySnapshot = await getDocs(q);
+  const polls = [];
+  querySnapshot.forEach((doc) => {
+    polls.push({ id: doc.id, ...doc.data() });
+  });
+  return polls;
 }
 
 export async function createPoll(documentId, data){
