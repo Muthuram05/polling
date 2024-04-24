@@ -123,6 +123,11 @@ export function PollWrapper() {
         <PollBuilderModal
           handleClose={handleClose}
           question={""}
+
+          isEdit={!!rowData.options.length}
+          rowData={rowData}
+        />
+      )}
           rowData={rowData}
         />
       )}

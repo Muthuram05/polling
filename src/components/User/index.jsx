@@ -47,7 +47,7 @@ export function UserForm() {
         >
           <div className="user-form">
             <h2>Hi user !</h2>
-            <p>{pollDeatils.question}</p>
+            <p>{pollDeatils.title}</p>
 
             {pollDeatils.type === "single" ? (
               <div>
