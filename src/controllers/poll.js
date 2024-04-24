@@ -122,3 +122,18 @@ export async function getResponses(data) {
     }
   }
 }
+
+export async function getSpecificPoll(id) {
+  const q = query(collection(db, "poll"), where("id", "==", id));
+  const querySnapshot = await getDocs(q);
+
+  // Check if a document matching the specified id was found
+  if (!querySnapshot.empty) {
+    // There should be only one document with the specified id, so we return the first one
+    const doc = querySnapshot.docs[0];
+    return { id: doc.id, ...doc.data() };
+  } else {
+    // No document found with the specified id
+    return null;
+  }
+}
