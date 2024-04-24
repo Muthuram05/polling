@@ -18,7 +18,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
-import { getPoll } from "../../controllers/poll";
+import { deletePoll, getPoll } from "../../controllers/poll";
 
 import "./style.css";
 import { PollBuilderModal } from "../pollbuilder";
@@ -101,12 +101,12 @@ export function PollWrapper() {
   );
 }
 
-const CopyToClipboardButton = () => {
+const CopyToClipboardButton = ({pollId=""}) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
-    navigator.clipboard.writeText(window.location.toString());
+    pollId && navigator.clipboard.writeText(`${window.location.toString()}${pollId}`);
   };
 
   return (
@@ -208,6 +208,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                     <IconButton
                       onClick={() => {
                         setModelState("delete");
+                        deletePoll(row.id).then((data) => console.log(data))
                       }}
                       color="primary"
                     >
@@ -222,7 +223,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                       respose
                     </Button>
 
-                    <CopyToClipboardButton />
+                    <CopyToClipboardButton  pollId={row.id}/>
                   </div>
                 </TableCell>
               </TableRow>
