@@ -8,9 +8,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
+import FormLabel from "@mui/material/FormLabel";
+import Button from "@mui/material/Button";
 
+import "./styles.css";
 
 const style = {
   position: "absolute",
@@ -38,12 +39,12 @@ export const PollBuilder = (props) => {
       id: "multiple",
       value: "Multiple answer",
     },
-  ]
+  ];
 
-  const addOption = function() {
+  const addOption = function () {
     //setAnswers()
-    setInputElement(true)
-  }
+    setInputElement(true);
+  };
 
   const [selectedType, setSelectedType] = useState("single");
   const [answers, setAnswers] = useState(["biscuit", "burger", "snacks"]);
@@ -53,9 +54,9 @@ export const PollBuilder = (props) => {
   const submitHandler = (e) => {
     e.preventDefault();
     setAnswers([...answers, inputVal]);
-    setInputElement(false)
-    setInputVal("")
-  }
+    setInputElement(false);
+    setInputVal("");
+  };
 
   return (
     <div>
@@ -68,7 +69,7 @@ export const PollBuilder = (props) => {
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">
+              <FormLabel id="demo-row-radio-buttons-group-label" className="">
                 Poll Type
               </FormLabel>
               <RadioGroup
@@ -76,7 +77,7 @@ export const PollBuilder = (props) => {
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
               >
-                {pollType.map((type) => {
+                {pollType.map((type, index) => {
                   return (
                     <FormControlLabel
                       value={type.id}
@@ -84,22 +85,15 @@ export const PollBuilder = (props) => {
                       label={type.value}
                       checked={type.id === selectedType}
                       onChange={() => setSelectedType(type.id)}
+                      key={index}
                     />
                   );
                 })}
-                {/* <FormControlLabel
-                  value="Single answer"
-                  control={<Radio />}
-                  label="Single answer"
-                />
-                <FormControlLabel
-                  value="Multiple Answer"
-                  control={<Radio />}
-                  label="Multiple answer"
-                /> */}
               </RadioGroup>
             </FormControl>
-
+            <div className="question">
+                  <input value={question}  />
+                </div>
             {selectedType === "single" ? (
               <div>
                 <div>
@@ -122,9 +116,72 @@ export const PollBuilder = (props) => {
                      setInputVal(e.target.value);
                   }} />
                 </form>}
+                {/* <div className="question">
+                  <input value={question}  />
+                </div> */}
+                <FormControl>
+                  <RadioGroup>
+                    {answers.map((data, index) => {
+                      return (
+                        <FormControlLabel
+                          control={<Radio />}
+                          label={data}
+                          className="radioLabel"
+                          value={data}
+                          key={index}
+                        />
+                      );
+                    })}
+                  </RadioGroup>
+                  <Button variant="contained" onClick={addOption}>
+                    Add option
+                  </Button>
+                </FormControl>
+                {showInput && (
+                  <form onSubmit={submitHandler}>
+                    <input
+                      type="text"
+                      value={inputVal}
+                      onChange={(e) => {
+                        setInputVal(e.target.value);
+                      }}
+                    />
+                     <button>+</button>
+                  </form>
+                )}
               </div>
             ) : (
-              <div></div>
+              <div>
+                <FormControl>
+                  <FormGroup>
+                    {answers.map((data, index) => {
+                      return (
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label={data}
+                          className="checkBoxLabel"
+                          key={index}
+                        />
+                      );
+                    })}
+                  </FormGroup>
+                  <Button variant="contained" onClick={addOption}>
+                    Add option
+                  </Button>
+                </FormControl>
+                {showInput && (
+                  <form onSubmit={submitHandler}>
+                    <input
+                      type="text"
+                      value={inputVal}
+                      onChange={(e) => {
+                        setInputVal(e.target.value);
+                      }}
+                    />
+                    <button>+</button>
+                  </form>
+                )}
+              </div>
             )}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}></Typography>
