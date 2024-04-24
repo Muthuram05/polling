@@ -6,7 +6,7 @@ export function Dashboard() {
   const user = userStore((state) => state.user);
   return (
     <div>
-     
+      {user && <button onClick={() => auth.signOut()}>Logout</button>}
       Dashboard
     </div>
   );

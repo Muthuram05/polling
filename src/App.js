@@ -8,12 +8,12 @@ import { Dashboard } from './components/Dashboard';
 
 function App() {
   const [user] = useAuthState(auth);
-  
+  const setUser = userStore((state)=>state.setUser)
   useEffect(()=>{
-    const setUser = userStore((state)=>state.setUser)
+
     console.log(user);
     setUser(user)
-  },[user])
+  })
   return (
     <div className="App">
       {user ? <Dashboard /> : <LoginForm />}
