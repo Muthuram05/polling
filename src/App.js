@@ -5,6 +5,8 @@ import { auth } from "./services/firebase";
 import { userStore } from './store';
 import { useEffect } from 'react';
 import { Dashboard } from './components/Dashboard';
+import { BrowserRouter as Router , Routes, Route} from "react-router-dom"
+import { SignUp } from './components/signup';
 
 function App() {
   const [user] = useAuthState(auth);
@@ -16,8 +18,14 @@ function App() {
   })
   return (
     <div className="App">
-      {user ? <Dashboard /> : <LoginForm />}
-        
+      <Router>
+        <Routes>
+        <Route path="/" element={user ? <Dashboard /> : <LoginForm />} />
+        <Route path="/sign-in" element={<LoginForm />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        </Routes>
+      </Router>
+      {/* {user ? <Dashboard /> : <LoginForm />} */}
     </div>
   );
 }
