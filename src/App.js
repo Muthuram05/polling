@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { BrowserRouter as Router , Routes, Route} from "react-router-dom"
 import { SignUp } from './components/signup';
+import { PollBuilder } from './components/pollbuilder';
 
 function App() {
   const [user] = useAuthState(auth);
@@ -18,6 +19,9 @@ function App() {
   })
   return (
     <div className="App">
+       <div>
+          <PollBuilder />
+        </div>
       <Router>
         <Routes>
         <Route path="/" element={user ? <Dashboard /> : <LoginForm />} />
