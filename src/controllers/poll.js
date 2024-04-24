@@ -82,7 +82,7 @@ export async function getSpecificPoll(id){
   
 }
 export async function updatePoll(data) {
-  let { title, options, id } = data;
+  let { title, options, type, id } = data;
 
   if (isAuthenticatedUser()) {
     let pollDocRef = doc(db, POLLS_COLLECTION, id);
@@ -93,6 +93,7 @@ export async function updatePoll(data) {
       let dataToUpdate = {};
 
       if (title) dataToUpdate.title = title;
+      if (type) dataToUpdate.type = type;
       if (Array.isArray(options)) dataToUpdate.options = options;
 
       if (Object.keys(dataToUpdate).length)
