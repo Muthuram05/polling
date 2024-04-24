@@ -8,7 +8,7 @@ import {
   where,
   getDocs,
   deleteDoc,
-  addDoc
+  addDoc,
 } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { userStore } from "../store";
@@ -65,8 +65,7 @@ export async function deletePoll(value) {
   }
 }
 
-export async function getSpecificPoll(id){
-  
+export async function getSpecificPoll(id) {
   const q = query(collection(db, "poll"), where("id", "==", id));
   const querySnapshot = await getDocs(q);
 
@@ -79,7 +78,6 @@ export async function getSpecificPoll(id){
     // No document found with the specified id
     return null;
   }
-  
 }
 export async function updatePoll(data) {
   let { title, options, type, id } = data;
@@ -119,8 +117,8 @@ export async function getResponses(data) {
 
       for (let option of pollData.options) {
         let q = query(
-          collection(db, `/${POLLS_COLLECTION}/${id}`),
-          where("responses", "array-contains", option)
+          collection(db, POLLS_COLLECTION),
+          where(`${id}.responses`, "array-contains", option)
         );
         let responseSnapshot = await getDocs(q);
         res["vote"][option] = responseSnapshot.size;
@@ -132,18 +130,16 @@ export async function getResponses(data) {
   }
 }
 
-export async function userResponse(id, subcollectionData){
+export async function userResponse(id, subcollectionData) {
+  // Query the collection to find documents where the specified field equals the value
+  const q = query(collection(db, "poll"), where("id", "==", id));
+  const querySnapshot = await getDocs(q);
 
-    // Query the collection to find documents where the specified field equals the value
-    const q = query(collection(db, "poll"), where("id", "==", id));
-    const querySnapshot = await getDocs(q);
-
-    // Iterate over the documents
-    querySnapshot.forEach(async (doc) => {
-      // Add data to the subcollection
-      const subcollectionRef = collection(doc.ref, "response");
-      await addDoc(subcollectionRef, subcollectionData);
-      console.log(`Data added to subcollection in document ${doc.id}`);
-    });
-
+  // Iterate over the documents
+  querySnapshot.forEach(async (doc) => {
+    // Add data to the subcollection
+    const subcollectionRef = collection(doc.ref, "response");
+    await addDoc(subcollectionRef, subcollectionData);
+    console.log(`Data added to subcollection in document ${doc.id}`);
+  });
 }
