@@ -71,13 +71,12 @@ export function PollWrapper() {
     }
   }, [user]);
 
-
   const [rowData, setRowData] = useState();
   const handleClose = () => {
-    setModelState(false); 
-  }
+    setModelState(false);
+  };
 
-  console.log(pollList, "pollList")
+  console.log(pollList, "pollList");
 
   return (
     <>
@@ -85,7 +84,11 @@ export function PollWrapper() {
       <Container maxWidth="lg">
         <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
           <PollListHeader />
-          <PollList setModelState={setModelState} pollList={pollList} setRowData={setRowData} />
+          <PollList
+            setModelState={setModelState}
+            pollList={pollList}
+            setRowData={setRowData}
+          />
         </Box>
       </Container>
       {modelState === "delete" && (
@@ -95,18 +98,25 @@ export function PollWrapper() {
         />
       )}
       {modelState === "share" && <CopyToClipboardButton />}
-      {modelState === "edit" && <PollBuilderModal handleClose={handleClose} question={""} rowData={rowData} />}
-      {modelState === "create" && <ActionModel setModelState={setModelState} />}
+      {modelState === "edit" && (
+        <PollBuilderModal
+          handleClose={handleClose}
+          question={""}
+          isEdit={!!rowData.options.length}
+          rowData={rowData}
+        />
+      )}
     </>
   );
 }
 
-const CopyToClipboardButton = ({pollId=""}) => {
+const CopyToClipboardButton = ({ pollId = "" }) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
-    pollId && navigator.clipboard.writeText(`${window.location.toString()}${pollId}`);
+    pollId &&
+      navigator.clipboard.writeText(`${window.location.toString()}${pollId}`);
   };
 
   return (
@@ -158,13 +168,15 @@ export function PollListHeader() {
   const [open, setOpen] = useState(false);
   return (
     <div>
-    <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
-      <div className="container">
-        <div> Hi ! Polling </div>
-        <Button variant="contained" onClick={()=> setOpen(true)}>Create</Button>
-      </div>
-    </Box>
-    {open ? <PollBuilderModal handleClose={() =>setOpen(false)} />: null}
+      <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
+        <div className="container">
+          <div> Hi ! Polling </div>
+          <Button variant="contained" onClick={() => setOpen(true)}>
+            Create
+          </Button>
+        </div>
+      </Box>
+      {open ? <PollBuilderModal handleClose={() => setOpen(false)} /> : null}
     </div>
   );
 }
@@ -199,7 +211,6 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                       onClick={() => {
                         setModelState("edit");
                         setRowData(row);
-                        
                       }}
                       color="primary"
                     >
@@ -208,7 +219,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                     <IconButton
                       onClick={() => {
                         setModelState("delete");
-                        deletePoll(row.id).then((data) => console.log(data))
+                        deletePoll(row.id).then((data) => console.log(data));
                       }}
                       color="primary"
                     >
@@ -223,7 +234,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                       respose
                     </Button>
 
-                    <CopyToClipboardButton  pollId={row.id}/>
+                    <CopyToClipboardButton pollId={row.id} />
                   </div>
                 </TableCell>
               </TableRow>

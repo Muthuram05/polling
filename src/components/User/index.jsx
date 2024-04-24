@@ -33,7 +33,7 @@ export function UserForm() {
       <Container maxWidth="lg">
         <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
           <div>Hi user !</div>
-          <div>{pollDeatils.question}</div>
+          <div>{pollDeatils.title}</div>
 
           {pollDeatils.type === "single" ? (
             <div>
