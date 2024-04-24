@@ -99,6 +99,26 @@ export const PollBuilder = (props) => {
                 </div>
             {selectedType === "single" ? (
               <div>
+                <div>
+                  <span>{question}</span>
+                </div>
+                <FormGroup>
+                  {answers.map((data) => {
+                    return (
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label={data}
+                      />
+                    );
+                  })}
+                </FormGroup>
+                <Button variant="contained" onClick={addOption}>Add option</Button>
+                <Button variant="contained" onClick={addOption}>Save</Button>
+               {showInput && <form onSubmit={submitHandler}>
+                  <input type="text" value={inputVal} onChange={(e) => {
+                     setInputVal(e.target.value);
+                  }} />
+                </form>}
                 {/* <div className="question">
                   <input value={question}  />
                 </div> */}

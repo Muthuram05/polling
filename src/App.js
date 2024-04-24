@@ -8,6 +8,7 @@ import { Dashboard } from './components/Dashboard';
 import { BrowserRouter as Router , Routes, Route} from "react-router-dom"
 import { SignUp } from './components/signup';
 import { PollBuilder } from './components/pollbuilder';
+import { PollWrapper } from "./components/Author";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -18,12 +19,9 @@ function App() {
   });
   return (
     <div className="App">
-       <div>
-          <PollBuilder />
-        </div>
       <Router>
         <Routes>
-          <Route path="/" element={user ? <Dashboard /> : <LoginForm />} />
+          <Route path="/" element={user ? <PollWrapper /> : <LoginForm />} />
           <Route path="/sign-in" element={<LoginForm />} />
           <Route path="/sign-up" element={<SignUp />} />
         </Routes>
