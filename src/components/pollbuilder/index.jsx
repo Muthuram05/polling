@@ -9,15 +9,14 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
 
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
-import { createPoll } from "../../controllers/poll";
+import FormLabel from "@mui/material/FormLabel";
+import Button from "@mui/material/Button";
+import { createPoll, updatePoll } from "../../controllers/poll";
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { userStore } from "../../store";
 
 import "./styles.css";
-
 
 const style = {
   position: "absolute",
@@ -33,7 +32,7 @@ const style = {
 };
 
 export const PollBuilderModal = (props) => {
-  const { handleClose, rowData } = props;
+  const { handleClose, rowData, isEdit = false } = props;
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const pollType = [
@@ -49,6 +48,11 @@ export const PollBuilderModal = (props) => {
 
   const addOption = function () {
     //setAnswers()
+    if (answers) {
+      setAnswers([...answers, inputVal]);
+    } else {
+      setAnswers([inputVal]);
+    }
     setInputElement(true);
   };
 
@@ -58,33 +62,40 @@ export const PollBuilderModal = (props) => {
   const [showInput, setInputElement] = useState(false);
   const [title, setTitle] = useState("");
   const user = userStore((state) => state.user);
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log(answers, "answers")
-    if(answers) {
-      setAnswers([...answers, inputVal]);
-    } else {
-      setAnswers([inputVal])
-    }
 
+
+  function handleSave() {
+    setInputElement(false);
+    setInputVal("");
+    if (title) {
+      const id = uuidv4();
+      if (isEdit) {
+        updatePoll({
+          id,
+          title: title,
+          options: answers,
+          author: user.uid,
+          type: selectedType,
+        }).then((data) => console.log(data));
+      } else
+        createPoll(id, {
+          id,
+          question: title,
+          options: answers,
+          author: user.uid,
+          type: selectedType,
+        }).then((data) => console.log(data));
     setInputElement(false)
     setInputVal("")
   }
-  function handleSave(){
-    if(title) {
-      const id = uuidv4()
-      createPoll(id,{id, title, options: answers, author: user.uid, type: selectedType}).then((data)=> console.log(data))
-    }
-   
-  }
-
-
-  console.log(answers, "answers")
+  console.log(answers, "answers");
 
   useEffect(() => {
+
       setAnswers(rowData?.options);
       setTitle(rowData?.title)
   }, [rowData])
+
 
 
   return (
@@ -145,17 +156,13 @@ export const PollBuilderModal = (props) => {
                   </Button>
                 </FormControl>
                 {showInput && (
-                  <form onSubmit={submitHandler}>
-                    <input
-                      type="text"
-                      value={inputVal}
-                      onChange={(e) => {
-                        setInputVal(e.target.value);
-                      }}
-                    />
-                    <button>+</button>
-                  </form>
-                  
+                  <input
+                    type="text"
+                    value={inputVal}
+                    onChange={(e) => {
+                      setInputVal(e.target.value);
+                    }}
+                  />
                 )}
               </div>
             ) : (
@@ -178,16 +185,13 @@ export const PollBuilderModal = (props) => {
                   </Button>
                 </FormControl>
                 {showInput && (
-                  <form onSubmit={submitHandler}>
-                    <input
-                      type="text"
-                      value={inputVal}
-                      onChange={(e) => {
-                        setInputVal(e.target.value);
-                      }}
-                    />
-                    <button>+</button>
-                  </form>
+                  <input
+                    type="text"
+                    value={inputVal}
+                    onChange={(e) => {
+                      setInputVal(e.target.value);
+                    }}
+                  />
                 )}
               </div>
             )}
@@ -197,7 +201,7 @@ export const PollBuilderModal = (props) => {
             X
           </Typography>
           <Typography>
-          <button onClick={handleSave}>Save</button>
+            <button onClick={handleSave}>Save</button>
           </Typography>
         </Box>
       </Modal>
