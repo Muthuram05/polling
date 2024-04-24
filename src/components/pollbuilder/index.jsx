@@ -20,14 +20,14 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  border: "1px solid gray",
   boxShadow: 24,
   p: 4,
+  borderRadius: "10px"
 };
 
 export const PollBuilder = (props) => {
-  const { question = "what is your favourite snacks" } = props;
-  const handleClose = () => {};
+  const { question = "what is your favourite snacks", handleClose } = props;
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const pollType = [
@@ -79,14 +79,17 @@ export const PollBuilder = (props) => {
               >
                 {pollType.map((type, index) => {
                   return (
-                    <FormControlLabel
+                   <div className="polltype">
+                     <FormControlLabel
                       value={type.id}
                       control={<Radio />}
                       label={type.value}
                       checked={type.id === selectedType}
                       onChange={() => setSelectedType(type.id)}
                       key={index}
+                    
                     />
+                   </div>
                   );
                 })}
               </RadioGroup>
@@ -103,13 +106,15 @@ export const PollBuilder = (props) => {
                   <RadioGroup>
                     {answers.map((data, index) => {
                       return (
-                        <FormControlLabel
+                       <div className="radioLabel">
+                         <FormControlLabel
                           control={<Radio />}
                           label={data}
-                          className="radioLabel"
+                          
                           value={data}
                           key={index}
                         />
+                       </div>
                       );
                     })}
                   </RadioGroup>
@@ -136,12 +141,14 @@ export const PollBuilder = (props) => {
                   <FormGroup>
                     {answers.map((data, index) => {
                       return (
-                        <FormControlLabel
+                       <div  className="checkBoxLabel">
+                         <FormControlLabel
                           control={<Checkbox />}
                           label={data}
-                          className="checkBoxLabel"
+                         
                           key={index}
                         />
+                       </div>
                       );
                     })}
                   </FormGroup>
@@ -165,6 +172,7 @@ export const PollBuilder = (props) => {
             )}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}></Typography>
+          <Typography className="closeModal"  onClick={handleClose}>X</Typography>
         </Box>
       </Modal>
     </div>

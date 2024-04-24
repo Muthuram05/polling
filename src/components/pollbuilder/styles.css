@@ -18,6 +18,7 @@
     border: 1px solid gray;
     border-radius: 10px;
     margin:10px 0;
+    padding: 2px 10px;
    /* display: inline-block !important;
    width: 50%; */
 }
@@ -26,4 +27,22 @@
     border: 1px solid gray;
     border-radius: 10px;
     margin:10px 0;
+    padding: 2px 10px;
+}
+
+.closeModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: lightGray;
+    padding: 5px 10px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.polltype{
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 10px 10px 10px 0px;
+    padding: 2px 10px;
 }
