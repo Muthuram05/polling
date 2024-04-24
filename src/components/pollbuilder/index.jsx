@@ -10,8 +10,10 @@ import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
+import { createPoll } from "../../controllers/poll";
 
-
+import { v4 as uuidv4 } from 'uuid';
+import { userStore } from "../../store";
 const style = {
   position: "absolute",
   top: "50%",
@@ -49,14 +51,17 @@ export const PollBuilder = (props) => {
   const [answers, setAnswers] = useState(["biscuit", "burger", "snacks"]);
   const [inputVal, setInputVal] = useState("");
   const [showInput, setInputElement] = useState(false);
-
+  const user = userStore((state) => state.user);
   const submitHandler = (e) => {
     e.preventDefault();
     setAnswers([...answers, inputVal]);
     setInputElement(false)
     setInputVal("")
   }
-
+  function handleSave(){
+    const id = uuidv4()
+    createPoll("123",{id, question,answers, author: user.uid}).then((data)=> console.log(data))
+  }
   return (
     <div>
       <Modal
@@ -116,7 +121,7 @@ export const PollBuilder = (props) => {
                   })}
                 </FormGroup>
                 <Button variant="contained" onClick={addOption}>Add option</Button>
-                <Button variant="contained" onClick={addOption}>Save</Button>
+                <Button variant="contained" onClick={handleSave}>Save</Button>
                {showInput && <form onSubmit={submitHandler}>
                   <input type="text" value={inputVal} onChange={(e) => {
                      setInputVal(e.target.value);
