@@ -45,15 +45,6 @@ export async function createPoll(documentId, data) {
     await setDoc(docRef, data);
     console.log("Document added successfully!");
   }
-  if (documentExists) {
-    // Document exists, update it
-    await updateDoc(docRef, data);
-    console.log("Document updated successfully!");
-  } else {
-    // Document does not exist, add it
-    await setDoc(docRef, data);
-    console.log("Document added successfully!");
-  }
 }
 
 export async function deletePoll(value) {
@@ -138,3 +129,4 @@ export async function getResponses(data) {
     }
   }
 }
+
