@@ -8,6 +8,7 @@ import {
   where,
   getDocs,
   deleteDoc,
+  addDoc
 } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { userStore } from "../store";
@@ -130,3 +131,18 @@ export async function getResponses(data) {
   }
 }
 
+export async function userResponse(id, subcollectionData){
+
+    // Query the collection to find documents where the specified field equals the value
+    const q = query(collection(db, "poll"), where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    // Iterate over the documents
+    querySnapshot.forEach(async (doc) => {
+      // Add data to the subcollection
+      const subcollectionRef = collection(doc.ref, "response");
+      await addDoc(subcollectionRef, subcollectionData);
+      console.log(`Data added to subcollection in document ${doc.id}`);
+    });
+
+}

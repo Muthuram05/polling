@@ -73,7 +73,7 @@ export const PollBuilderModal = (props) => {
   function handleSave(){
     if(title) {
       const id = uuidv4()
-      createPoll(id,{id, question: title, options: answers, author: user.uid, type: selectedType}).then((data)=> console.log(data))
+      createPoll(id,{id, title, options: answers, author: user.uid, type: selectedType}).then((data)=> console.log(data))
     }
    
   }
