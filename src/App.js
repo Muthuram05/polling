@@ -1,28 +1,27 @@
-import './App.css';
-import LoginForm from './components/login';
-import {useAuthState} from "react-firebase-hooks/auth"
+import "./App.css";
+import LoginForm from "./components/login";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./services/firebase";
-import { userStore } from './store';
-import { useEffect } from 'react';
-import { Dashboard } from './components/Dashboard';
-import { BrowserRouter as Router , Routes, Route} from "react-router-dom"
-import { SignUp } from './components/signup';
+import { userStore } from "./store";
+import { useEffect } from "react";
+import { Dashboard } from "./components/Dashboard";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { SignUp } from "./components/signup";
 
 function App() {
   const [user] = useAuthState(auth);
-  const setUser = userStore((state)=>state.setUser)
-  useEffect(()=>{
-
+  const setUser = userStore((state) => state.setUser);
+  useEffect(() => {
     console.log(user);
-    setUser(user)
-  })
+    setUser(user);
+  });
   return (
     <div className="App">
       <Router>
         <Routes>
-        <Route path="/" element={user ? <Dashboard /> : <LoginForm />} />
-        <Route path="/sign-in" element={<LoginForm />} />
-        <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/" element={user ? <Dashboard /> : <LoginForm />} />
+          <Route path="/sign-in" element={<LoginForm />} />
+          <Route path="/sign-up" element={<SignUp />} />
         </Routes>
       </Router>
       {/* {user ? <Dashboard /> : <LoginForm />} */}
