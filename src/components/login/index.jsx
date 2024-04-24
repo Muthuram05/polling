@@ -1,49 +1,41 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth } from "../../services/firebase.js";
-import { userStore } from "../../store/index.js";
 import "./styles.css";
+import { Link } from 'react-router-dom';
+import { signIn, signUp } from '../../controllers/auth';
+import { userStore } from '../../store';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const setUser = userStore((state)=>state.setUser)
+  const handleSubmit = (e) => {
+    signIn(email,password).then((data) => setUser(data))
+  };
   
-  function handleSubmit(){
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up 
-      const user = userCredential.user;
-      setUser(user)
-      console.log(user);
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
-  }
   return (
-   <div className={"loginContainer"}>
+   <div>
     <h1>Sign In</h1>
-      <label>
-        Email:
+     <div className='form_inputs'>
+        <label className='form_label'>Email:</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className='form_input'
         />
-      </label>
-      <label>
+     </div>
+     <div className='form_inputs'>
+     <label className='form_label'>
         Password:
-        <input
+      </label>
+      <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className='form_input'
         />
-      </label>
+     </div>
+     <Link to={"/sign-up"}>Create Account</Link>
       <button type="submit" onClick={handleSubmit}>Login</button>
    </div>
   );
