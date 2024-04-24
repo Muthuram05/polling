@@ -1,0 +1,29 @@
+.question {
+    /* border: 1px solid gray;
+    padding: 10px;
+    border-radius: 10px; */
+    width: 100%;
+}
+
+.question input {
+    height: 30px;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+
+.checkBoxLabel{
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin:10px 0;
+   /* display: inline-block !important;
+   width: 50%; */
+}
+
+.radioLabel{
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin:10px 0;
+}
