@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -33,9 +33,7 @@ const style = {
 };
 
 export const PollBuilderModal = (props) => {
-  const { handleClose, rowData, question } = props;
-
-  console.log(rowData, "rowData")
+  const { handleClose, rowData } = props;
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const pollType = [
@@ -55,24 +53,38 @@ export const PollBuilderModal = (props) => {
   };
 
   const [selectedType, setSelectedType] = useState("single");
-  const [answers, setAnswers] = useState(["biscuit", "burger", "snacks"]);
+  const [answers, setAnswers] = useState([]);
   const [inputVal, setInputVal] = useState("");
   const [showInput, setInputElement] = useState(false);
+  const [title, setTitle] = useState("");
   const user = userStore((state) => state.user);
   const submitHandler = (e) => {
     e.preventDefault();
-    const id = uuidv4()
-    createPoll(id,{id, title: question ,answers, author: user.uid}).then((data)=> console.log(data))
-    setAnswers([...answers, inputVal]);
+    console.log(answers, "answers")
+    if(answers) {
+      setAnswers([...answers, inputVal]);
+    } else {
+      setAnswers([inputVal])
+    }
 
     setInputElement(false)
     setInputVal("")
   }
-  // function handleSave(){
-  //   const id = uuidv4()
-  //   createPoll(id,{id, title: question ,answers, author: user.uid}).then((data)=> console.log(data))
-  // }
+  function handleSave(){
+    if(title) {
+      const id = uuidv4()
+      createPoll(id,{id, question: title, options: answers, author: user.uid}).then((data)=> console.log(data))
+    }
+   
+  }
 
+
+  console.log(answers, "answers")
+
+  useEffect(() => {
+      setAnswers(rowData?.options);
+      setTitle(rowData?.question)
+  }, [rowData])
 
 
   return (
@@ -110,13 +122,13 @@ export const PollBuilderModal = (props) => {
               </RadioGroup>
             </FormControl>
             <div className="question">
-              <input value={rowData?.question} />
+              <input value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             {selectedType === "single" ? (
               <div>
                 <FormControl>
                   <RadioGroup>
-                    {rowData?.options?.map((data, index) => {
+                    {answers?.map((data, index) => {
                       return (
                         <div className="radioLabel" key={index}>
                           <FormControlLabel
@@ -143,13 +155,14 @@ export const PollBuilderModal = (props) => {
                     />
                     <button>+</button>
                   </form>
+                  
                 )}
               </div>
             ) : (
               <div>
                 <FormControl>
                   <FormGroup>
-                    {rowData?.options?.map((data, index) => {
+                    {answers?.map((data, index) => {
                       return (
                         <div className="checkBoxLabel" key={index}>
                           <FormControlLabel
@@ -182,6 +195,9 @@ export const PollBuilderModal = (props) => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}></Typography>
           <Typography className="closeModal" onClick={handleClose}>
             X
+          </Typography>
+          <Typography>
+          <button onClick={handleSave}>Save</button>
           </Typography>
         </Box>
       </Modal>
