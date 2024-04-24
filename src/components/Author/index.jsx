@@ -191,7 +191,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                   {index + 1}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.title}
+                  {row.question}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   <div>
