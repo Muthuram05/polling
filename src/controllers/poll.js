@@ -110,7 +110,7 @@ export async function getResponses(data) {
 
       for (let option of pollData.options) {
         let q = query(
-          collection(db, POLLS_COLLECTION, id),
+          collection(db, `/${POLLS_COLLECTION}/${id}`),
           where("responses", "array-contains", option)
         );
         let responseSnapshot = await getDocs(q);
