@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth } from "../../services/firebase.js";
+import { userStore } from "../../store/index.js";
 import "./styles.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission, e.g., send data to server
-    console.log('Email:', email);
-    console.log('Password:', password);
-  };
+  const setUser = userStore((state)=>state.setUser)
+  const user = userStore((state)=>state.user)
 
+  function handleSubmit(){
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up 
+      const user = userCredential.user;
+      setUser(user)
+      console.log(user);
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+  }
   return (
    <div className={"loginContainer"}>
     <h1>Sign In</h1>
-     <form onSubmit={handleSubmit}>
       <label>
         Email:
         <input
@@ -32,8 +45,7 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </label>
-      <button type="submit">Login</button>
-    </form>
+      <button type="submit" onClick={handleSubmit}>Login</button>
    </div>
   );
 };
