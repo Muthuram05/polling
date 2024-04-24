@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { getResponses } from "../../../controllers/poll";
 
@@ -24,10 +24,15 @@ const MOCK = {
 export default function PollResponse({ pollId }) {
   const [response, setResponse] = useState(MOCK);
 
-  // getResponses({ id: pollId }).then((data) => {
-  //   console.log("response____", data);
-  //   setResponse(MOCK);
-  // });
+  useEffect(() => {
+    getResponses({ id: pollId }).then((data) => {
+      console.log("response____", data);
+      setResponse(MOCK);
+    });
+
+    return () => {};
+  }, []);
+
   if (!response) return <h4>No Response</h4>;
   return (
     <>
