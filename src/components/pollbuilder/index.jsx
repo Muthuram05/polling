@@ -83,7 +83,7 @@ export const PollBuilderModal = (props) => {
 
   useEffect(() => {
       setAnswers(rowData?.options);
-      setTitle(rowData?.question)
+      setTitle(rowData?.title)
   }, [rowData])
 
 
