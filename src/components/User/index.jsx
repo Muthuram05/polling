@@ -11,6 +11,8 @@ import Box from "@mui/material/Box";
 import { getSpecificPoll, userResponse } from "../../controllers/poll";
 import { Button } from "@mui/material";
 
+import "./styles.css";
+
 // const data = {
 //   options: ["A", "B", "C"],
 //   question: "what is fav colur?",
@@ -27,52 +29,66 @@ export function UserForm() {
       setpollDeatils(res);
     });
   });
-  function handleSubmit(){
-    userResponse(id, pollDeatils).then(data => console.log(data))
+  function handleSubmit() {
+    userResponse(id, pollDeatils).then((data) => console.log(data));
   }
   return (
     <>
-      <Container maxWidth="lg">
-        <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
-          <div>Hi user !</div>
-          <div>{pollDeatils.question}</div>
+      <Container maxWidth="lg" className="user-form">
+        <Box
+          height={800}
+          width={800}
+          my={4}
+          display="flex"
+          alignItems="center"
+          gap={4}
+          p={2}
+          sx={{ border: "2px solid grey" }}
+        >
+          <div className="user-form">
+            <h2>Hi user !</h2>
+            <p>{pollDeatils.question}</p>
 
-          {pollDeatils.type === "single" ? (
-            <div>
-              <FormControl>
-                <RadioGroup>
-                  {pollDeatils.options?.map((data, index) => {
-                    return (
-                      <div className="radioLabel" key={index}>
-                        <FormControlLabel
-                          control={<Radio />}
-                          label={data}
-                          value={data}
-                        />
-                      </div>
-                    );
-                  })}
-                </RadioGroup>
-              </FormControl>
-            </div>
-          ) : (
-            <div>
-              <FormControl>
-                <FormGroup>
-                  {pollDeatils.options?.map((data, index) => {
-                    return (
-                      <div className="checkBoxLabel" key={index}>
-                        <FormControlLabel control={<Checkbox />} label={data} />
-                      </div>
-                    );
-                  })}
-                </FormGroup>
-              </FormControl>
-            </div>
-          )}
-          <Button variant="contained" onClick={handleSubmit}>
-            Submit
-          </Button>
+            {pollDeatils.type === "single" ? (
+              <div>
+                <FormControl>
+                  <RadioGroup>
+                    {pollDeatils.options?.map((data, index) => {
+                      return (
+                        <div className="radioLabel" key={index}>
+                          <FormControlLabel
+                            control={<Radio />}
+                            label={data}
+                            value={data}
+                          />
+                        </div>
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+              </div>
+            ) : (
+              <div>
+                <FormControl>
+                  <FormGroup>
+                    {pollDeatils.options?.map((data, index) => {
+                      return (
+                        <div className="checkBoxLabel" key={index}>
+                          <FormControlLabel
+                            control={<Checkbox />}
+                            label={data}
+                          />
+                        </div>
+                      );
+                    })}
+                  </FormGroup>
+                </FormControl>
+              </div>
+            )}
+            <Button variant="contained" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </div>
         </Box>
       </Container>
     </>
