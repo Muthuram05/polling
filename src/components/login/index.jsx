@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import "./styles.css";
 import { Link } from 'react-router-dom';
+import { signIn, signUp } from '../../controllers/auth';
+import { userStore } from '../../store';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const setUser = userStore((state)=>state.setUser)
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission, e.g., send data to server
-    console.log('Email:', email);
-    console.log('Password:', password);
+    signIn(email,password).then((data) => setUser(data))
   };
-
+  
   return (
    <div>
     <h1>Sign In</h1>
@@ -37,8 +36,8 @@ const LoginForm = () => {
           className='form_input'
         />
      </div>
-     <Link to={"/sign-up"}>Create Account</Link>
-      <button type="submit">Login</button>
+     {/* <Link to={"/sign-up"}>Create Account</Link> */}
+      <button type="submit" onClick={handleSubmit}>Login</button>
     </form>
    </div>
   );

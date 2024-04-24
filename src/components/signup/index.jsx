@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { signUp } from "../../controllers/auth";
+
+
 
 
 export const SignUp = () => {
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState();
+  function handleSubmit(){
+    signUp(email,password);
+  }
     return <div>
         <form>
         <h3>Sign Up</h3>
@@ -15,7 +23,7 @@ export const SignUp = () => {
         </div>
         <div className="mb-3">
           <label>Last name</label>
-          <input type="text" className="form-control" placeholder="Last name" />
+          <input type="text" className="form-control" placeholder="Last name" value={}/>
         </div>
         <div className="mb-3">
           <label>Email address</label>
