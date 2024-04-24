@@ -45,34 +45,6 @@ export async function createPoll(documentId, data) {
     await setDoc(docRef, data);
     console.log("Document added successfully!");
   }
-}
-
-export async function getSpecificPoll(id) {
-  const q = query(collection(db, "poll"), where("id", "==", id));
-  const querySnapshot = await getDocs(q);
-
-  // Check if a document matching the specified id was found
-  if (!querySnapshot.empty) {
-    // There should be only one document with the specified id, so we return the first one
-    const doc = querySnapshot.docs[0];
-    return { id: doc.id, ...doc.data() };
-  } else {
-    // No document found with the specified id
-    return null;
-
-  // Check if the document already exists
-  const docSnapshot = await getDoc(docRef);
-  const documentExists = docSnapshot.exists();
-
-  if (documentExists) {
-    // Document exists, update it
-    await updateDoc(docRef, data);
-    console.log("Document updated successfully!");
-  } else {
-    // Document does not exist, add it
-    await setDoc(docRef, data);
-    console.log("Document added successfully!");
-  }
   if (documentExists) {
     // Document exists, update it
     await updateDoc(docRef, data);
@@ -148,5 +120,20 @@ export async function getResponses(data) {
     } else {
       console.log("No such poll!");
     }
+  }
+}
+
+export async function getSpecificPoll(id) {
+  const q = query(collection(db, "poll"), where("id", "==", id));
+  const querySnapshot = await getDocs(q);
+
+  // Check if a document matching the specified id was found
+  if (!querySnapshot.empty) {
+    // There should be only one document with the specified id, so we return the first one
+    const doc = querySnapshot.docs[0];
+    return { id: doc.id, ...doc.data() };
+  } else {
+    // No document found with the specified id
+    return null;
   }
 }
