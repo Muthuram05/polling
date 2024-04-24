@@ -21,29 +21,29 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { getPoll } from "../../controllers/poll";
 
 import "./style.css";
-import { PollBuilder } from "../pollbuilder";
+import { PollBuilderModal } from "../pollbuilder";
 
 //list header
 //body
 //
 
-// const pollList = [
-//   {
-//     question: "what is yor fav color ?",
-//     options: ["A", "B", "C", "D"],
-//     _id: "poll001",
-//   },
-//   {
-//     question: "what is yor fav color ?",
-//     options: ["A", "B", "C", "D"],
-//     _id: "poll002",
-//   },
-//   {
-//     question: "what is yor fav color ?",
-//     options: ["A", "B", "C", "D"],
-//     _id: "poll003",
-//   },
-// ];
+const POLL_LIST = [
+  {
+    question: "what is yor fav color ?",
+    options: ["A", "B", "C", "D"],
+    _id: "poll001",
+  },
+  {
+    question: "what is yor fav color ?",
+    options: ["A", "B", "C", "D"],
+    _id: "poll002",
+  },
+  {
+    question: "what is yor fav color ?",
+    options: ["A", "B", "C", "D"],
+    _id: "poll003",
+  },
+];
 
 const style = {
   position: "absolute",
@@ -70,13 +70,22 @@ export function PollWrapper() {
       });
     }
   }, [user]);
+
+
+  const [rowData, setRowData] = useState();
+  const handleClose = () => {
+    setModelState(false); 
+  }
+
+  console.log(pollList, "pollList")
+
   return (
     <>
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
           <PollListHeader />
-          <PollList setModelState={setModelState} pollList={pollList} />
+          <PollList setModelState={setModelState} pollList={pollList} setRowData={setRowData} />
         </Box>
       </Container>
       {modelState === "delete" && (
@@ -86,7 +95,7 @@ export function PollWrapper() {
         />
       )}
       {modelState === "share" && <CopyToClipboardButton />}
-      {modelState === "edit" && <ActionModel setModelState={setModelState} />}
+      {modelState === "edit" && <PollBuilderModal handleClose={handleClose} question={""} rowData={rowData} />}
       {modelState === "create" && <ActionModel setModelState={setModelState} />}
     </>
   );
@@ -149,20 +158,18 @@ export function PollListHeader() {
   const [open, setOpen] = useState(false);
   return (
     <div>
-      <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
-        <div className="container">
-          <div> Hi ! Polling </div>
-          <Button variant="contained" onClick={() => setOpen(true)}>
-            Create
-          </Button>
-        </div>
-      </Box>
-      {open ? <PollBuilder handleClose={() => setOpen(false)} /> : null}
+    <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
+      <div className="container">
+        <div> Hi ! Polling </div>
+        <Button variant="contained" onClick={()=> setOpen(true)}>Create</Button>
+      </div>
+    </Box>
+    {open ? <PollBuilderModal handleClose={() =>setOpen(false)} />: null}
     </div>
   );
 }
 
-export function PollList({ setModelState, pollList = [] }) {
+export function PollList({ setModelState, setRowData, pollList = [] }) {
   return (
     <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
       <TableContainer component={Paper}>
@@ -191,6 +198,8 @@ export function PollList({ setModelState, pollList = [] }) {
                     <IconButton
                       onClick={() => {
                         setModelState("edit");
+                        setRowData(row);
+                        
                       }}
                       color="primary"
                     >
