@@ -74,7 +74,7 @@ const style = {
 export function PollWrapper() {
   const [modelState, setModelState] = useState("");
   const [pollList, setPolllist] = useState([]);
-  const user = userStore((state) => state.user);
+  const { user, currentPoll } = userStore((state) => state);
 
   useEffect(() => {
     if (user) {
@@ -111,11 +111,11 @@ export function PollWrapper() {
           content={"Are you sure want to delete ?"}
         />
       )}
-      {modelState === "response" && (
+      {modelState === "response" && currentPoll && (
         <ActionModel
           setModelState={setModelState}
           title={"Response"}
-          content={<PollResponse />}
+          content={<PollResponse pollId={currentPoll} />}
         />
       )}
       {modelState === "share" && <CopyToClipboardButton />}
@@ -202,6 +202,7 @@ export function PollListHeader() {
 }
 
 export function PollList({ setModelState, setRowData, pollList = [] }) {
+  const { setCurrentPoll } = userStore((state) => state);
   return (
     <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
       <TableContainer component={Paper}>
@@ -248,6 +249,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                     <Button
                       variant="contained"
                       onClick={() => {
+                        setCurrentPoll(row.id);
                         setModelState("response");
                       }}
                     >
