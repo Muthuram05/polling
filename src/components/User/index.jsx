@@ -8,7 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
-import { getSpecificPoll } from "../../controllers/poll";
+import { getSpecificPoll, userResponse } from "../../controllers/poll";
 import { Button } from "@mui/material";
 
 // const data = {
@@ -27,7 +27,9 @@ export function UserForm() {
       setpollDeatils(res);
     });
   });
-
+  function handleSubmit(){
+    userResponse(id, pollDeatils).then(data => console.log(data))
+  }
   return (
     <>
       <Container maxWidth="lg">
@@ -68,7 +70,7 @@ export function UserForm() {
               </FormControl>
             </div>
           )}
-          <Button variant="contained" onClick={() => {}}>
+          <Button variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
         </Box>
