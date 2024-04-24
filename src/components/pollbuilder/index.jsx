@@ -25,8 +25,8 @@ const style = {
 };
 
 export const PollBuilder = (props) => {
-  const { question = "what is your favourite snacks" } = props;
-  const handleClose = () => {};
+  const { question = "what is your favourite snacks", handleClose } = props;
+  // const handleClose = () => {};
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const pollType = [
@@ -116,6 +116,7 @@ export const PollBuilder = (props) => {
                   })}
                 </FormGroup>
                 <Button variant="contained" onClick={addOption}>Add option</Button>
+                <Button variant="contained" onClick={addOption}>Save</Button>
                {showInput && <form onSubmit={submitHandler}>
                   <input type="text" value={inputVal} onChange={(e) => {
                      setInputVal(e.target.value);
