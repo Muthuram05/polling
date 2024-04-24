@@ -10,6 +10,7 @@ import { SignUp } from "./components/signup";
 import { PollBuilder } from "./components/pollbuilder";
 import { PollWrapper } from "./components/Author";
 import { getPoll } from "./controllers/poll";
+import { UserForm } from "./components/User";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -27,6 +28,7 @@ function App() {
           <Route path="/sign-in" element={<LoginForm />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/my-polls" element={<PollWrapper />} />
+          <Route path=":id" element={<UserForm />} />
         </Routes>
         {user ? <Dashboard /> : <LoginForm />}
       </Router>
