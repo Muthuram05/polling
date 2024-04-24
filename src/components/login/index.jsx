@@ -9,8 +9,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
 
   const setUser = userStore((state)=>state.setUser)
-  const user = userStore((state)=>state.user)
-
+  
   function handleSubmit(){
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
