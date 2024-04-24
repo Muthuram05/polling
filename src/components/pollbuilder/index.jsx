@@ -60,7 +60,7 @@ export const PollBuilder = (props) => {
   }
   function handleSave(){
     const id = uuidv4()
-    createPoll("123",{id, question,answers, author: user.uid}).then((data)=> console.log(data))
+    createPoll(id,{id, title: question,answers, author: user.uid}).then((data)=> console.log(data))
   }
   return (
     <div>

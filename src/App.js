@@ -9,6 +9,7 @@ import { BrowserRouter as Router , Routes, Route} from "react-router-dom"
 import { SignUp } from './components/signup';
 import { PollBuilder } from './components/pollbuilder';
 import { PollWrapper } from "./components/Author";
+import { getPoll } from "./controllers/poll";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -17,6 +18,7 @@ function App() {
     console.log(user);
     setUser(user);
   });
+  // getPoll("123").then((data) => console.log(data))
   return (
     <div className="App">
       <Router>
