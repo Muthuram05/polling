@@ -18,7 +18,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
-import { getPoll } from "../../controllers/poll";
+import { deletePoll, getPoll } from "../../controllers/poll";
 
 import "./style.css";
 import { PollBuilder } from "../pollbuilder";
@@ -85,19 +85,18 @@ export function PollWrapper() {
           content={"Are you sure want to delete ?"}
         />
       )}
-      {modelState === "share" && <CopyToClipboardButton />}
       {modelState === "edit" && <ActionModel setModelState={setModelState} />}
       {modelState === "create" && <ActionModel setModelState={setModelState} />}
     </>
   );
 }
 
-const CopyToClipboardButton = () => {
+const CopyToClipboardButton = ({pollId=""}) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
-    navigator.clipboard.writeText(window.location.toString());
+    pollId && navigator.clipboard.writeText(`${window.location.toString()}${pollId}`);
   };
 
   return (
@@ -199,6 +198,7 @@ export function PollList({ setModelState, pollList = [] }) {
                     <IconButton
                       onClick={() => {
                         setModelState("delete");
+                        deletePoll(row.id).then((data) => console.log(data))
                       }}
                       color="primary"
                     >
@@ -213,7 +213,7 @@ export function PollList({ setModelState, pollList = [] }) {
                       respose
                     </Button>
 
-                    <CopyToClipboardButton />
+                    <CopyToClipboardButton  pollId={row.id}/>
                   </div>
                 </TableCell>
               </TableRow>

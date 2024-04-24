@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, deleteDoc, } from "firebase/firestore";
 import { db } from "../services/firebase";
 
 export async function getPoll(authorId){
@@ -28,4 +28,22 @@ export async function createPoll(documentId, data){
       await setDoc(docRef, data);
       console.log("Document added successfully!");
     }
+}
+
+
+export async function deletePoll(value) {
+  try {
+    // Query the collection to find documents where the specified field equals the value
+    const q = query(collection(db, "poll"), where("id", "==", value));
+    const querySnapshot = await getDocs(q);
+
+    // Iterate over the documents and delete each one
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+      console.log(`Document ${doc.id} successfully deleted!`);
+    });
+  } catch (error) {
+    console.error("Error deleting documents:", error);
+    throw error;
+  }
 }
