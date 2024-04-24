@@ -8,6 +8,7 @@ import {
   where,
   getDocs,
   deleteDoc,
+  addDoc
 } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { userStore } from "../store";
@@ -45,15 +46,6 @@ export async function createPoll(documentId, data) {
     await setDoc(docRef, data);
     console.log("Document added successfully!");
   }
-  if (documentExists) {
-    // Document exists, update it
-    await updateDoc(docRef, data);
-    console.log("Document updated successfully!");
-  } else {
-    // Document does not exist, add it
-    await setDoc(docRef, data);
-    console.log("Document added successfully!");
-  }
 }
 
 export async function deletePoll(value) {
@@ -73,8 +65,24 @@ export async function deletePoll(value) {
   }
 }
 
+export async function getSpecificPoll(id){
+  
+  const q = query(collection(db, "poll"), where("id", "==", id));
+  const querySnapshot = await getDocs(q);
+
+  // Check if a document matching the specified id was found
+  if (!querySnapshot.empty) {
+    // There should be only one document with the specified id, so we return the first one
+    const doc = querySnapshot.docs[0];
+    return { id: doc.id, ...doc.data() };
+  } else {
+    // No document found with the specified id
+    return null;
+  }
+  
+}
 export async function updatePoll(data) {
-  let { title, options, id } = data;
+  let { title, options, type, id } = data;
 
   if (isAuthenticatedUser()) {
     let pollDocRef = doc(db, POLLS_COLLECTION, id);
@@ -85,6 +93,7 @@ export async function updatePoll(data) {
       let dataToUpdate = {};
 
       if (title) dataToUpdate.title = title;
+      if (type) dataToUpdate.type = type;
       if (Array.isArray(options)) dataToUpdate.options = options;
 
       if (Object.keys(dataToUpdate).length)
@@ -110,7 +119,7 @@ export async function getResponses(data) {
 
       for (let option of pollData.options) {
         let q = query(
-          collection(db, POLLS_COLLECTION, id),
+          collection(db, `/${POLLS_COLLECTION}/${id}`),
           where("responses", "array-contains", option)
         );
         let responseSnapshot = await getDocs(q);
@@ -123,17 +132,18 @@ export async function getResponses(data) {
   }
 }
 
-export async function getSpecificPoll(id) {
-  const q = query(collection(db, "poll"), where("id", "==", id));
-  const querySnapshot = await getDocs(q);
+export async function userResponse(id, subcollectionData){
 
-  // Check if a document matching the specified id was found
-  if (!querySnapshot.empty) {
-    // There should be only one document with the specified id, so we return the first one
-    const doc = querySnapshot.docs[0];
-    return { id: doc.id, ...doc.data() };
-  } else {
-    // No document found with the specified id
-    return null;
-  }
+    // Query the collection to find documents where the specified field equals the value
+    const q = query(collection(db, "poll"), where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    // Iterate over the documents
+    querySnapshot.forEach(async (doc) => {
+      // Add data to the subcollection
+      const subcollectionRef = collection(doc.ref, "response");
+      await addDoc(subcollectionRef, subcollectionData);
+      console.log(`Data added to subcollection in document ${doc.id}`);
+    });
+
 }

@@ -11,21 +11,34 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
 import { IconButton, Snackbar } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import CloseIcon from "@mui/icons-material/Close";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
 
 import { deletePoll, getPoll } from "../../controllers/poll";
 
 import "./style.css";
 import { PollBuilderModal } from "../pollbuilder";
+import PollResponse from "../modals/response";
 
 //list header
 //body
 //
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const POLL_LIST = [
   {
@@ -61,7 +74,7 @@ const style = {
 export function PollWrapper() {
   const [modelState, setModelState] = useState("");
   const [pollList, setPolllist] = useState([]);
-  const user = userStore((state) => state.user);
+  const { user, currentPoll } = userStore((state) => state);
 
   useEffect(() => {
     if (user) {
@@ -94,7 +107,15 @@ export function PollWrapper() {
       {modelState === "delete" && (
         <ActionModel
           setModelState={setModelState}
+          title={"Delete"}
           content={"Are you sure want to delete ?"}
+        />
+      )}
+      {modelState === "response" && currentPoll && (
+        <ActionModel
+          setModelState={setModelState}
+          title={"Response"}
+          content={<PollResponse pollId={currentPoll} />}
         />
       )}
       {modelState === "share" && <CopyToClipboardButton />}
@@ -102,10 +123,15 @@ export function PollWrapper() {
         <PollBuilderModal
           handleClose={handleClose}
           question={""}
+
           isEdit={!!rowData.options.length}
           rowData={rowData}
         />
       )}
+          rowData={rowData}
+        />
+      )}
+      {modelState === "create" && <ActionModel setModelState={setModelState} />}
     </>
   );
 }
@@ -135,32 +161,31 @@ const CopyToClipboardButton = ({ pollId = "" }) => {
   );
 };
 
-export function ActionModel({ setModelState, content }) {
+export function ActionModel({ setModelState, title, content, footer }) {
   return (
-    <Modal
+    <BootstrapDialog
+      onClose={setModelState}
+      aria-labelledby="customized-dialog-title"
       open={true}
-      onClose={() => {
-        setModelState("");
-      }}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <div className="modelContainer">
-          <div
-            className="closeButton"
-            onClick={() => {
-              setModelState("");
-            }}
-          >
-            X
-          </div>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {content}
-          </Typography>
-        </div>
-      </Box>
-    </Modal>
+      <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+        {title}
+      </DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClose={setModelState}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <DialogContent dividers>{content}</DialogContent>
+      <DialogActions>{footer}</DialogActions>
+    </BootstrapDialog>
   );
 }
 
@@ -182,6 +207,7 @@ export function PollListHeader() {
 }
 
 export function PollList({ setModelState, setRowData, pollList = [] }) {
+  const { setCurrentPoll } = userStore((state) => state);
   return (
     <Box component="section" sx={{ p: 2, border: "1px  grey" }}>
       <TableContainer component={Paper}>
@@ -203,7 +229,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                   {index + 1}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.title}
+                  {row.question}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   <div>
@@ -228,10 +254,11 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                     <Button
                       variant="contained"
                       onClick={() => {
-                        setModelState("respose");
+                        setCurrentPoll(row.id);
+                        setModelState("response");
                       }}
                     >
-                      respose
+                      response
                     </Button>
 
                     <CopyToClipboardButton pollId={row.id} />

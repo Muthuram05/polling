@@ -63,6 +63,7 @@ export const PollBuilderModal = (props) => {
   const [title, setTitle] = useState("");
   const user = userStore((state) => state.user);
 
+
   function handleSave() {
     setInputElement(false);
     setInputVal("");
@@ -84,9 +85,9 @@ export const PollBuilderModal = (props) => {
           author: user.uid,
           type: selectedType,
         }).then((data) => console.log(data));
-    }
+    setInputElement(false)
+    setInputVal("")
   }
-
   console.log(answers, "answers");
 
   useEffect(() => {
