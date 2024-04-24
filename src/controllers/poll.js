@@ -106,7 +106,7 @@ export async function getResponses(data) {
 
     if (docSnap.exists()) {
       let pollData = docSnap.data();
-      let res = { title: pollData.title };
+      let res = { title: pollData.title, vote: {} };
 
       for (let option of pollData.options) {
         let q = query(
@@ -114,10 +114,11 @@ export async function getResponses(data) {
           where("responses", "array-contains", option)
         );
         let responseSnapshot = await getDocs(q);
-        res[option] = responseSnapshot.size;
+        res["vote"][option] = responseSnapshot.size;
       }
+      return res;
     } else {
-      console.log("No such document!");
+      console.log("No such poll!");
     }
   }
 }
