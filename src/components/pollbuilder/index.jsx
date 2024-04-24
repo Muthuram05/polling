@@ -91,9 +91,12 @@ export const PollBuilderModal = (props) => {
   console.log(answers, "answers");
 
   useEffect(() => {
-    setAnswers(rowData?.options);
-    setTitle(rowData?.question);
-  }, [rowData]);
+
+      setAnswers(rowData?.options);
+      setTitle(rowData?.title)
+  }, [rowData])
+
+
 
   return (
     <div>
