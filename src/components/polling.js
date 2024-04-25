@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, Card } from "react-bootstrap";
 
 const Polling = () => {
-  const [question, setQuestion] = useState("");
+  const [title, settitle] = useState("");
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -19,8 +19,8 @@ const Polling = () => {
     axios
       .get("https://your-polling-api.com/poll")
       .then((response) => {
-        const { question, options } = response.data;
-        setQuestion(question);
+        const { title, options } = response.data;
+        settitle(title);
         setOptions(options);
         setIsLoading(false);
       })
@@ -51,7 +51,7 @@ const Polling = () => {
   return (
     <Card style={{ width: "30rem" }}>
       <Card.Body>
-        <Card.Title>{question}</Card.Title>
+        <Card.Title>{title}</Card.Title>
         {isLoading && <p>Loading...</p>}
         {!isLoading && (
           <div>

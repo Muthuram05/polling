@@ -13,7 +13,7 @@ const xLabels = [
   "Page G",
 ];
 const MOCK = {
-  title: "what do you think?",
+  title: "this is my question",
   vote: {
     option1: 23,
     option2: 14,
@@ -36,7 +36,7 @@ export default function PollResponse({ pollId }) {
   if (!response) return <h4>No Response</h4>;
   return (
     <>
-      <h4>Question: {response.title}</h4>
+      <h4>title: {response.title}</h4>
       <br />
       <BarChart
         width={500}

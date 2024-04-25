@@ -27,6 +27,7 @@ import { deletePoll, getPoll } from "../../controllers/poll";
 import "./style.css";
 import { PollBuilderModal } from "../pollbuilder";
 import PollResponse from "../modals/response";
+import { auth } from "../../services/firebase"; // Import auth from firebase
 
 //list header
 //body
@@ -42,17 +43,17 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const POLL_LIST = [
   {
-    question: "what is yor fav color ?",
+    title: "what is yor fav color ?",
     options: ["A", "B", "C", "D"],
     _id: "poll001",
   },
   {
-    question: "what is yor fav color ?",
+    title: "what is yor fav color ?",
     options: ["A", "B", "C", "D"],
     _id: "poll002",
   },
   {
-    question: "what is yor fav color ?",
+    title: "what is yor fav color ?",
     options: ["A", "B", "C", "D"],
     _id: "poll003",
   },
@@ -102,6 +103,16 @@ export function PollWrapper() {
             pollList={pollList}
             setRowData={setRowData}
           />
+          {/* Add Logout button */}
+          <Box
+            sx={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+            }}
+          >
+            <Button onClick={() => auth.signOut()}>Logout</Button>
+          </Box>
         </Box>
       </Container>
       {modelState === "delete" && (
@@ -122,12 +133,8 @@ export function PollWrapper() {
       {modelState === "edit" && (
         <PollBuilderModal
           handleClose={handleClose}
-          question={""}
-
+          title={""}
           isEdit={!!rowData.options.length}
-          rowData={rowData}
-        />
-      )}
           rowData={rowData}
         />
       )}
@@ -215,12 +222,12 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
           <TableHead>
             <TableRow>
               <TableCell>S.No</TableCell>
-              <TableCell align="right">Question</TableCell>
+              <TableCell align="right">title</TableCell>
               <TableCell align="right" />
             </TableRow>
           </TableHead>
           <TableBody>
-            {pollList.map((row, index) => (
+            {pollList.length !== 0 ? pollList.map((row, index) => (
               <TableRow
                 key={row._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -229,7 +236,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                   {index + 1}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.question}
+                  {row.title}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   <div>
@@ -265,7 +272,7 @@ export function PollList({ setModelState, setRowData, pollList = [] }) {
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+            )) : <div>You have no poll created</div>}
           </TableBody>
         </Table>
       </TableContainer>

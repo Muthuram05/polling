@@ -1,43 +1,66 @@
-import React, { useState } from 'react';
-import "./styles.css";
-import { Link } from 'react-router-dom';
-import { signIn, signUp } from '../../controllers/auth';
-import { userStore } from '../../store';
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { Link, useNavigate } from "react-router-dom"; 
+import { signIn } from "../../controllers/auth";
+import { userStore } from "../../store";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const setUser = userStore((state)=>state.setUser)
-  const handleSubmit = (e) => {
-    signIn(email,password).then((data) => setUser(data))
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const setUser = userStore((state) => state.setUser);
+  const navigate = useNavigate();
+  const handleSubmit = () => {
+    signIn(email, password).then((data) => setUser(data));
+    navigate("/");
   };
-  
+
   return (
-   <div>
-    <h1>Sign In</h1>
-     <div className='form_inputs'>
-        <label className='form_label'>Email:</label>
-        <input
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Sign In
+      </Typography>
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { mb: 2, width: "100%" },
+          "& .MuiButton-root": { mt: 2 },
+        }}
+      >
+        <TextField
+          label="Email"
+          variant="outlined"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className='form_input'
         />
-     </div>
-     <div className='form_inputs'>
-     <label className='form_label'>
-        Password:
-      </label>
-      <input
+        <TextField
+          label="Password"
+          variant="outlined"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className='form_input'
         />
-     </div>
-     <Link to={"/sign-up"}>Create Account</Link>
-      <button type="submit" onClick={handleSubmit}>Login</button>
-   </div>
+        <Button variant="contained" onClick={handleSubmit}>
+          Login
+        </Button>
+      </Box>
+      <Typography variant="body2" mt={2}>
+        <Link to="/sign-up" color="primary">
+          Create Account
+        </Link>
+      </Typography>
+    </Box>
   );
 };
 

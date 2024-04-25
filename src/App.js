@@ -30,7 +30,7 @@ function App() {
           <Route path="/my-polls" element={<PollWrapper />} />
           <Route path=":id" element={<UserForm />} />
         </Routes>
-        {user ? <Dashboard /> : <LoginForm />}
+        {/* {user ? <Dashboard /> : <LoginForm />} */}
       </Router>
     </div>
   );

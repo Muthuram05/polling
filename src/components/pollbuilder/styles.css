@@ -1,11 +1,11 @@
-.question {
+.title {
     /* border: 1px solid gray;
     padding: 10px;
     border-radius: 10px; */
     width: 100%;
 }
 
-.question input {
+.title input {
     height: 30px;
     width: 100%;
     padding: 10px;

@@ -8,15 +8,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
-
+import TextField from "@mui/material/TextField";
 import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
 import { createPoll, updatePoll } from "../../controllers/poll";
-
 import { v4 as uuidv4 } from "uuid";
 import { userStore } from "../../store";
-
-import "./styles.css";
 
 const style = {
   position: "absolute",
@@ -33,7 +30,6 @@ const style = {
 
 export const PollBuilderModal = (props) => {
   const { handleClose, rowData, isEdit = false } = props;
-  // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const pollType = [
     {
@@ -42,19 +38,9 @@ export const PollBuilderModal = (props) => {
     },
     {
       id: "multiple",
-      value: "Multiple answer",
+      value: "Multiple answers",
     },
   ];
-
-  const addOption = function () {
-    //setAnswers()
-    if (answers) {
-      setAnswers([...answers, inputVal]);
-    } else {
-      setAnswers([inputVal]);
-    }
-    setInputElement(true);
-  };
 
   const [selectedType, setSelectedType] = useState("single");
   const [answers, setAnswers] = useState([]);
@@ -63,40 +49,49 @@ export const PollBuilderModal = (props) => {
   const [title, setTitle] = useState("");
   const user = userStore((state) => state.user);
 
-
-  function handleSave() {
-    setInputElement(false);
-    setInputVal("");
-    if (title) {
-      const id = uuidv4();
-      if (isEdit) {
-        updatePoll({
-          id,
-          title: title,
-          options: answers,
-          author: user.uid,
-          type: selectedType,
-        }).then((data) => console.log(data));
-      } else
-        createPoll(id, {
-          id,
-          question: title,
-          options: answers,
-          author: user.uid,
-          type: selectedType,
-        }).then((data) => console.log(data));
-    setInputElement(false)
-    setInputVal("")
-  }
-  console.log(answers, "answers");
-
   useEffect(() => {
-
+    if (rowData) {
       setAnswers(rowData?.options);
-      setTitle(rowData?.title)
-  }, [rowData])
+      setTitle(rowData?.title);
+    }
+  }, [rowData]);
 
+  const handleSave = () => {
+    if (title) {
+      const id = isEdit ? rowData.id : uuidv4();
+      const pollData = {
+        id,
+        title,
+        options: answers,
+        author: user.uid,
+        type: selectedType,
+      };
 
+      if (isEdit) {
+        updatePoll(pollData)
+          .then((data) => console.log(data, "create"))
+          .catch((error) => console.error("Error updating poll:", error));
+      } else {
+        createPoll(id, pollData)
+          .then((data) => console.log(data))
+          .catch((error) => console.error("Error creating poll:", error));
+      }
+
+      handleClose();
+    }
+  };
+
+  const handleAddOption = () => {
+    setInputElement(true);
+  };
+
+  const handleSaveOption = () => {
+    if (inputVal.trim() !== "") {
+      setAnswers([...answers, inputVal]);
+      setInputVal("");
+      setInputElement(false);
+    }
+  };
 
   return (
     <div>
@@ -107,102 +102,90 @@ export const PollBuilderModal = (props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography variant="h6" component="h2">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>Poll Builder</span>
+              <Button onClick={handleClose}>X</Button>
+            </div>
             <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label" className="">
-                Poll Type
-              </FormLabel>
+              <FormLabel>Poll Type</FormLabel>
               <RadioGroup
                 row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
+                name="poll-type"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
               >
-                {pollType.map((type, index) => {
-                  return (
-                    <div className="polltype" key={index}>
-                      <FormControlLabel
-                        value={type.id}
-                        control={<Radio />}
-                        label={type.value}
-                        checked={type.id === selectedType}
-                        onChange={() => setSelectedType(type.id)}
-                      />
-                    </div>
-                  );
-                })}
+                {pollType.map((type) => (
+                  <FormControlLabel
+                    key={type.id}
+                    value={type.id}
+                    control={<Radio />}
+                    label={type.value}
+                  />
+                ))}
               </RadioGroup>
             </FormControl>
             <div className="question">
-              <input value={title} onChange={(e) => setTitle(e.target.value)} />
+              <TextField
+                label="Question"
+                variant="outlined"
+                fullWidth
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
-            {selectedType === "single" ? (
-              <div>
-                <FormControl>
-                  <RadioGroup>
-                    {answers?.map((data, index) => {
-                      return (
-                        <div className="radioLabel" key={index}>
-                          <FormControlLabel
-                            control={<Radio />}
-                            label={data}
-                            value={data}
-                          />
-                        </div>
-                      );
-                    })}
-                  </RadioGroup>
-                  <Button variant="contained" onClick={addOption}>
-                    Add option
-                  </Button>
-                </FormControl>
-                {showInput && (
-                  <input
-                    type="text"
-                    value={inputVal}
-                    onChange={(e) => {
-                      setInputVal(e.target.value);
-                    }}
+            <FormControl>
+              <FormGroup>
+                {answers?.map((answer, index) => (
+                  <FormControlLabel
+                    key={index}
+                    control={
+                      selectedType === "single" ? <Radio /> : <Checkbox />
+                    }
+                    label={answer}
                   />
-                )}
-              </div>
-            ) : (
-              <div>
-                <FormControl>
-                  <FormGroup>
-                    {answers?.map((data, index) => {
-                      return (
-                        <div className="checkBoxLabel" key={index}>
-                          <FormControlLabel
-                            control={<Checkbox />}
-                            label={data}
-                          />
-                        </div>
-                      );
-                    })}
-                  </FormGroup>
-                  <Button variant="contained" onClick={addOption}>
-                    Add option
-                  </Button>
-                </FormControl>
-                {showInput && (
-                  <input
-                    type="text"
-                    value={inputVal}
-                    onChange={(e) => {
-                      setInputVal(e.target.value);
-                    }}
-                  />
-                )}
-              </div>
-            )}
+                ))}
+              </FormGroup>
+            </FormControl>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}></Typography>
-          <Typography className="closeModal" onClick={handleClose}>
-            X
-          </Typography>
-          <Typography>
-            <button onClick={handleSave}>Save</button>
-          </Typography>
+          {showInput && (
+            <div style={{ marginTop: "10px", display: "flex" }}>
+              <TextField
+                label="Option"
+                variant="outlined"
+                fullWidth
+                value={inputVal}
+                onChange={(e) => setInputVal(e.target.value)}
+              />
+              <Button
+                onClick={handleSaveOption}
+                variant="text"
+                style={{ marginLeft: "10px" }}
+              >
+                Save Option
+              </Button>
+            </div>
+          )}
+          <Box
+            sx={{
+              position: "sticky",
+              bottom: "20px",
+              textAlign: "center",
+            }}
+          >
+            <Button onClick={handleAddOption} variant="outlined">
+              Add Option
+            </Button>
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </div>

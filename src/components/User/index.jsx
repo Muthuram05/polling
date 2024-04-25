@@ -15,7 +15,7 @@ import "./styles.css";
 
 // const data = {
 //   options: ["A", "B", "C"],
-//   question: "what is fav colur?",
+//   title: "what is fav colur?",
 //   _id: "data_1",
 //   type: "single",
 // };
@@ -28,7 +28,7 @@ export function UserForm() {
     getSpecificPoll(id).then((res) => {
       setpollDeatils(res);
     });
-  });
+  },[id]);
   function handleSubmit() {
     userResponse(id, pollDeatils).then((data) => console.log(data));
   }
@@ -47,13 +47,13 @@ export function UserForm() {
         >
           <div className="user-form">
             <h2>Hi user !</h2>
-            <p>{pollDeatils.title}</p>
+            <p>{pollDeatils?.title}</p>
 
-            {pollDeatils.type === "single" ? (
+            {pollDeatils?.type === "single" ? (
               <div>
                 <FormControl>
                   <RadioGroup>
-                    {pollDeatils.options?.map((data, index) => {
+                    {pollDeatils?.options?.map((data, index) => {
                       return (
                         <div className="radioLabel" key={index}>
                           <FormControlLabel
@@ -71,7 +71,7 @@ export function UserForm() {
               <div>
                 <FormControl>
                   <FormGroup>
-                    {pollDeatils.options?.map((data, index) => {
+                    {pollDeatils?.options?.map((data, index) => {
                       return (
                         <div className="checkBoxLabel" key={index}>
                           <FormControlLabel
