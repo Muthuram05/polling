@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { getResponses } from "../../../controllers/poll";
 
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const xLabels = [
-  "Page A",
-  "Page B",
-  "Page C",
-  "Page D",
-  "Page E",
-  "Page F",
-  "Page G",
-];
+// const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+// const xLabels = [
+//   "Page A",
+//   "Page B",
+//   "Page C",
+//   "Page D",
+//   "Page E",
+//   "Page F",
+//   "Page G",
+// ];
 const MOCK = {
   title: "this is my question",
   vote: {
@@ -31,7 +31,7 @@ export default function PollResponse({ pollId }) {
     });
 
     return () => {};
-  }, []);
+  }, [pollId]);
 
   if (!response) return <h4>No Response</h4>;
   return (

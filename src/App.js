@@ -4,12 +4,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./services/firebase";
 import { userStore } from "./store";
 import { useEffect } from "react";
-import { Dashboard } from "./components/Dashboard";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SignUp } from "./components/signup";
-import { PollBuilder } from "./components/pollbuilder";
 import { PollWrapper } from "./components/Author";
-import { getPoll } from "./controllers/poll";
 import { UserForm } from "./components/User";
 
 function App() {

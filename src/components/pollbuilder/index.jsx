@@ -155,7 +155,7 @@ export const PollBuilderModal = (props) => {
             </FormControl>
           </Typography>
           {showInput && (
-            <div style={{ marginTop: "10px", display: "flex" }}>
+            <div style={{ marginTop: "10px", display: "flex", marginBottom: "100px" }}>
               <TextField
                 label="Option"
                 variant="outlined"

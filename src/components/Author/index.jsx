@@ -41,36 +41,36 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const POLL_LIST = [
-  {
-    title: "what is yor fav color ?",
-    options: ["A", "B", "C", "D"],
-    _id: "poll001",
-  },
-  {
-    title: "what is yor fav color ?",
-    options: ["A", "B", "C", "D"],
-    _id: "poll002",
-  },
-  {
-    title: "what is yor fav color ?",
-    options: ["A", "B", "C", "D"],
-    _id: "poll003",
-  },
-];
+// const POLL_LIST = [
+//   {
+//     title: "what is yor fav color ?",
+//     options: ["A", "B", "C", "D"],
+//     _id: "poll001",
+//   },
+//   {
+//     title: "what is yor fav color ?",
+//     options: ["A", "B", "C", "D"],
+//     _id: "poll002",
+//   },
+//   {
+//     title: "what is yor fav color ?",
+//     options: ["A", "B", "C", "D"],
+//     _id: "poll003",
+//   },
+// ];
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  height: 100,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  padding: "12px",
-};
+// const style = {
+//   position: "absolute",
+//   top: "50%",
+//   left: "50%",
+//   transform: "translate(-50%, -50%)",
+//   width: 400,
+//   height: 100,
+//   bgcolor: "background.paper",
+//   border: "2px solid #000",
+//   boxShadow: 24,
+//   padding: "12px",
+// };
 
 export function PollWrapper() {
   const [modelState, setModelState] = useState("");
