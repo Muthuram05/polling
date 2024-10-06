@@ -42,7 +42,6 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-react-app": "10.0.0",
     "babel-runtime": "6.26.0",
-    "build": "workspace:@kissflow/kf-build@latest",
     "case-sensitive-paths-webpack-plugin": "2.4.0",
     "chalk": "4.1.2",
     "chokidar": "3.5.3",
