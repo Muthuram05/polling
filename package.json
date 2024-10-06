@@ -51,7 +51,6 @@
     "dayjs": "^1.11.5",
     "dotenv": "10.0.0",
     "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.6",
     "eslint-config-standard-kf": "workspace:eslint-config-standard-kf@latest",
     "events": "3.3.0",
     "file-loader": "6.2.0",
